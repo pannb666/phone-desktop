@@ -1,0 +1,80 @@
+<UserControl x:Class="PhoneDesktop.Overlay.OverlayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             SnapsToDevicePixels="True"
+             UseLayoutRounding="True">
+    <Grid x:Name="Root" ClipToBounds="True">
+        <!-- 桌面主区域：壁纸 / 兜底色 -->
+        <Image x:Name="WallpaperImage"
+               Stretch="UniformToFill"
+               RenderOptions.BitmapScalingMode="HighQuality" />
+
+        <!-- Dock 层（阶段 2 起） -->
+        <Grid x:Name="DockLayer" />
+
+        <!-- 右下角应用抽屉悬浮按钮（阶段 3 起） -->
+        <Border x:Name="DrawerButton"
+                Width="52"
+                Height="52"
+                CornerRadius="26"
+                BorderBrush="#33FFFFFF"
+                BorderThickness="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,28,154"
+                Cursor="Hand"
+                ToolTip="应用抽屉"
+                MouseLeftButtonUp="OnDrawerButtonClick">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="#CC16171C" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#E6242530" />
+                            <Setter Property="BorderBrush" Value="#59FFFFFF" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock Text="&#xE71D;"
+                       FontFamily="Segoe MDL2 Assets"
+                       FontSize="20"
+                       Foreground="#E6FFFFFF"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Border>
+
+        <!-- 轻提示（启动失败等） -->
+        <Border x:Name="Toast"
+                Visibility="Collapsed"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,152"
+                Padding="16,10"
+                CornerRadius="12"
+                Background="#F0131418"
+                BorderBrush="#33FFFFFF"
+                BorderThickness="1">
+            <TextBlock x:Name="ToastText"
+                       FontSize="13"
+                       FontFamily="Microsoft YaHei UI"
+                       Foreground="#FFF2F2F5" />
+        </Border>
+
+        <!-- 仅调试模式启动时显示的角标，用于确认“这一层确实是我们的覆盖层” -->
+        <Border x:Name="DevBadge"
+                Visibility="Collapsed"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="16"
+                Padding="10,6"
+                CornerRadius="8"
+                Background="#B0000000">
+            <TextBlock x:Name="DevBadgeText"
+                       Foreground="#FFE6E9F2"
+                       FontSize="12"
+                       FontFamily="Microsoft YaHei UI"
+                       Text="PhoneDesktop · 阶段1 覆盖层已挂载（Ctrl+Alt+Q 退出）" />
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,230 @@
+﻿<Window x:Class="PhoneDesktop.Settings.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PhoneDesktopSettings"
+        Width="620"
+        Height="640"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        AllowsTransparency="False"
+        WindowStartupLocation="CenterScreen"
+        Background="#FF0E0F13"
+        FontFamily="Microsoft YaHei UI"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+    <Window.Resources>
+        <Style x:Key="RowBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="#0DFFFFFF" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="18,14" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+        <Style x:Key="RowTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#F2F2F5" />
+        </Style>
+        <Style x:Key="RowHintStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="#8CFFFFFF" />
+        </Style>
+        <Style x:Key="DarkButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#1FFFFFFF" />
+            <Setter Property="Foreground" Value="#F2F2F5" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#33FFFFFF" />
+            <Setter Property="Padding" Value="14,7" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#33FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="18" Background="#FF14151A" BorderBrush="#33FFFFFF" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="64" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Background="Transparent"
+                    MouseLeftButtonDown="OnHeaderMouseDown">
+                <Grid>
+                    <TextBlock Text="设置"
+                               Margin="24,0,0,0"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#F2F2F5" />
+                    <Border x:Name="CloseButton"
+                            Width="32"
+                            Height="32"
+                            Margin="0,0,16,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            CornerRadius="8"
+                            Background="Transparent"
+                            Cursor="Hand"
+                            MouseLeftButtonUp="OnCloseClick">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#33FF5F5F" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="&#xE711;"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   FontSize="12"
+                                   Foreground="#E6FFFFFF"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Row="1" Padding="24,8,24,0" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- 动态壁纸 / 透明桌面 -->
+                    <Border Style="{StaticResource RowBorderStyle}">
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Text="使用动态壁纸（透明桌面）" Style="{StaticResource RowTitleStyle}" />
+                                <TextBlock x:Name="TransparentHint"
+                                           Text="隐藏桌面图标，让 Wallpaper Engine 等动态壁纸直接显示；重启后生效"
+                                           Style="{StaticResource RowHintStyle}" />
+                            </StackPanel>
+                            <CheckBox x:Name="TransparentCheck"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Foreground="#F2F2F5"
+                                      Checked="OnTransparentChanged"
+                                      Unchecked="OnTransparentChanged" />
+                        </Grid>
+                    </Border>
+
+                    <!-- 开机自启 -->
+                    <Border Style="{StaticResource RowBorderStyle}">
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Text="开机自启" Style="{StaticResource RowTitleStyle}" />
+                                <TextBlock Text="登录 Windows 后自动启动手机风格桌面"
+                                           Style="{StaticResource RowHintStyle}" />
+                            </StackPanel>
+                            <CheckBox x:Name="AutostartCheck"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Foreground="#F2F2F5"
+                                      Checked="OnAutostartChanged"
+                                      Unchecked="OnAutostartChanged" />
+                        </Grid>
+                    </Border>
+
+                    <!-- 全局快捷键 -->
+                    <Border Style="{StaticResource RowBorderStyle}">
+                        <StackPanel>
+                            <TextBlock Text="应用抽屉全局快捷键" Style="{StaticResource RowTitleStyle}" />
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border x:Name="HotkeyBox"
+                                        Grid.Column="0"
+                                        Height="40"
+                                        CornerRadius="8"
+                                        Background="#0FFFFFFF"
+                                        BorderBrush="#33FFFFFF"
+                                        BorderThickness="1"
+                                        Cursor="Hand"
+                                        MouseLeftButtonUp="OnHotkeyBoxClick">
+                                    <TextBlock x:Name="HotkeyText"
+                                               Margin="12,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="14"
+                                               Foreground="#F2F2F5"
+                                               Text="Ctrl + Space" />
+                                </Border>
+
+                                <Button Grid.Column="1"
+                                        Margin="10,0,0,0"
+                                        Style="{StaticResource DarkButtonStyle}"
+                                        Content="恢复默认"
+                                        Click="OnResetHotkeyClick" />
+                            </Grid>
+
+                            <TextBlock x:Name="HotkeyHint"
+                                       Style="{StaticResource RowHintStyle}"
+                                       Text="点击上面的框，然后按下新的组合键（Esc 取消）" />
+                            <TextBlock x:Name="HotkeyStatus"
+                                       FontSize="12"
+                                       Margin="0,6,0,0"
+                                       TextWrapping="Wrap"
+                                       Foreground="#8CFFFFFF" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 兜底色 -->
+                    <Border Style="{StaticResource RowBorderStyle}">
+                        <StackPanel>
+                            <TextBlock Text="壁纸读取失败时的兜底色" Style="{StaticResource RowTitleStyle}" />
+                            <WrapPanel x:Name="ColorPanel" Margin="0,12,0,0" />
+                            <TextBlock x:Name="ColorStatus"
+                                       Style="{StaticResource RowHintStyle}"
+                                       Text="点击色块即可切换" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 关于 -->
+                    <Border Style="{StaticResource RowBorderStyle}">
+                        <StackPanel>
+                            <TextBlock Text="关于" Style="{StaticResource RowTitleStyle}" />
+                            <TextBlock x:Name="AboutText" Style="{StaticResource RowHintStyle}" />
+                            <Button Margin="0,12,0,0"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource DarkButtonStyle}"
+                                    Content="打开配置文件夹"
+                                    Click="OnOpenConfigFolderClick" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <Grid Grid.Row="2" Margin="24,0">
+                <TextBlock x:Name="VersionText"
+                           VerticalAlignment="Center"
+                           FontSize="12"
+                           Foreground="#66FFFFFF" />
+                <Button HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource DarkButtonStyle}"
+                        Content="关闭"
+                        Click="OnCloseClick" />
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
